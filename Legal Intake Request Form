@@ -1,0 +1,50 @@
+function onFormSubmit(e) {
+ try {
+   var email = "email@gmail.com"; // this is the email address where you want requests to be sent. if you have a trello, asana, or monday.com board (as examples), you can set this to be the email address for your intake board to automatically create tasks
+   var RequestDate = e.namedValues['[column name]'][0]; // replace [column name] in the ''s with the column name in question from the Google Sheet (be careful as you might have a hanging " " at the end of your column name
+   var RequestorEmail = e.namedValues['[column name]'][0];
+   var RequestorName = e.namedValues['[column name]'][0];
+   var RequestorTeam = e.namedValues['[column name]'][0];
+   var TypeOfRequest = e.namedValues['[column name]'][0];
+   var ContractStage = e.namedValues['[column name]'][0];
+   var ContractType = e.namedValues['[column name]'][0];
+   var CounterpartyLegalName = e.namedValues['[column name]'][0];
+   var CounterpartyContactName = e.namedValues['[column name]'][0];
+   var CounterpartyContactEmail = e.namedValues['[column name]'][0];
+   var ContractEffectiveDate = e.namedValues['[column name]'][0];
+   var ContractTerminationDate = e.namedValues['[column name]'][0];
+   var Urgency = e.namedValues['[column name]'][0];
+   var DesiredCompletionDate = e.namedValues['[column name]'][0];
+   var FileUpload = e.namedValues['[column name]'][0];
+
+   var AdditionalComments = e.namedValues['[column name]'][0];
+   var OnlineTermsLink = e.namedValues['[column name]'][0];
+
+   var subject = Urgency + " " + ContractStage + ": " + ContractType + " with " + CounterpartyLegalName + " " + "#NonSalesContract";
+
+   var message = 
+       "**Submitted by:** " + RequestorName +
+         "\n\n**Submission Date:** " + RequestDate +
+         "\n\n**Requestor's Email Address:** " + RequestorEmail +
+          "\n\n**Requestor's Team:** " + RequestorTeam + 
+           "\n\n**Type of Request:** " + TypeOfRequest +
+            "\n\n**Contract Stage:** " + ContractStage +
+             "\n\n**Contract Type:** " + ContractType +
+              "\n\n**Counterparty Legal Name:** " + CounterpartyLegalName + 
+               "\n\n**Counterparty Contact Name:** " + CounterpartyContactName +
+                 "\n\n**Counterparty Contact Email:** " + CounterpartyContactEmail +
+                  "\n\n**Contract Effective Date:** " + ContractEffectiveDate +
+                   "\n\n**Contract Termination Date:** " + ContractTerminationDate +
+                     "\n\n**Any Existing Agreements?:** " + ExistingAgreements +
+                      "\n\n**Urgency?:** " + Urgency +
+                       "\n\n**Desired Completion Date:** " + DesiredCompletionDate +
+                        "\n\n**Additional Comments:** " + AdditionalComments +
+                         "\n\n**Online Terms Link: **" + " " + OnlineTermsLink +
+                           "\n\n**File Link(s): **" + " " + FileUpload;
+
+   MailApp.sendEmail(email, subject, message, {cc: RequestorEmail});
+ }
+ catch (e) {
+   Logger.log(e.toString());
+ }
+}
