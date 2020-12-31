@@ -1,0 +1,53 @@
+function onFormSubmit(e) {
+ try {
+   var email = "email@gmail.com"; // static email address for recipient of form information - you can also have a variable email address
+   var RequestorEmail = e.namedValues['Email'][0]; // the text in the '' for all variables should match the column name in the Google Sheet (be careful as you might have a hanging " " at the end of your column name
+   var RequestorName = e.namedValues['Name'][0]; 
+   var TicketStage = e.namedValues['Stage'][0];
+   var cc = RequestorEmail; // to cc the requestor on the email that's sent to the recipient, we've defined the cc as the RequestorEmail
+
+// the below content is to be included in ALL emails 
+   var msgHtml = 
+      "<b>Signature request details:</b>" + "<br/>"
+       + "<br/>" 
+        + "<b>Submitted by: </b>" + RequestorName + "<br/>"
+         + "<b>Requestor's Email Address: </b>" + RequestorEmail + "<br/>"
+          + "<b>Signature Request Stage: </b>" + TicketStage + "<br/>" ; 
+
+// depending on the submission's Ticket Stage, we'd need to define additional variables and add them to the email message
+if (TicketStage === "New Signature Request"){ // this is where we set when the additional variables need to be defined - in this case, when TicketStage is New Signature Request
+      var NEWTypeofContract = e.namedValues['Contract Type'][0]; // these are the additional variables to define
+      var NEWKDescription = e.namedValues['Description'][0];
+      var NEWCounterpartyCompany = e.namedValues['Counterparty Company'][0]
+      var NEWUrgency = e.namedValues['Urgency'][0];
+      var NEWLegalReviewer = e.namedValues['Legal Reviewer'][0];
+      var NEWFileUpload = e.namedValues['File'][0]; 
+
+   var subject = NEWUrgency + " Request:" + TicketStage + " for " + NEWCounterpartyCompany + " (" + RequestorName + ")" ; // defining the subject line for New Signature Request emails 
+
+     msgHtml = msgHtml +  // adding the newly defined content to the original msgHtml 
+      "<b>Type of Contract: </b>" + " " + NEWTypeofContract + "<br/>"
+        + "<b>Contract Description: </b>" + " " + NEWKDescription + "<br/>"
+         + "<b>Legal Reviewer: </b>" + " " + NEWLegalReviewer + "<br/>"
+           + "<b>Counterparty Company: </b>" + " " + NEWCounterpartyCompany + "<br/>"
+             +"<b>File(s): </b>" + " " +  NEWFileUpload + "<br/>";
+}
+
+if (TicketStage === "Update Signature Information"){ // this is where we set when the additional variables need to be defined - in this case, when TicketStage is Update Signature Information
+      var UPDATECounterparty = e.namedValues['Counterparty'][0]; // these are the additional variables to define
+      var UPDATEEnvelopeName = e.namedValues['Existing Envelope Name'][0];
+      var UPDATENewFile = e.namedValues['New File'][0];
+
+   var subject = "Request" + ": " + TicketStage + " for " + UPDATEEnvelopeName + " " + "(" + RequestorName + ")"; // defining the subject line for Update Information tickets 
+
+
+     msgHtml = msgHtml + // adding the newly defined content to the original msgHtml 
+      "<b>Counterparty: </b>" + " " + UPDATECounterparty + "<br/>" 
+       + "<b>Envelope Name: </b>" + " " + UPDATEEnvelopeName + "<br/>"
+           + "<b>New File: </b>" + " " + UPDATENewFile + "<br/>";
+   }
+
+
+   MailApp.sendEmail(email, subject, msgHtml, { htmlBody: msgHtml , cc: cc }); // email trigger - parameters are (to, subject line, message, {options, including sending message in html and the cc)}
+ } 
+}
